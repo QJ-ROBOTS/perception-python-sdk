@@ -5,6 +5,11 @@ import requests
 
 from .authorization import Authorization
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import List, Dict, Union, Optional, Tuple
+
 
 class Perception:
     def __init__(self):

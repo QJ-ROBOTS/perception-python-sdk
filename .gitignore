@@ -1,3 +1,5 @@
+upload-pip.sh
+update-version.sh
 __pycache__/*
 dist/
 .idea/*
