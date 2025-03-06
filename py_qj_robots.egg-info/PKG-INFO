@@ -1,8 +1,8 @@
 Metadata-Version: 2.2
 Name: py-qj-robots
-Version: 0.1.1
+Version: 0.1.2
 Summary: 千诀机器人 Python SDK
-Home-page: https://github.com/yourusername/py-qj-robots
+Home-page: https://github.com/QJ-ROBOTS/perception-python-sdk
 Author: QJ ROBOTS
 Author-email: github@qj-robots.com
 Classifier: Programming Language :: Python :: 3
@@ -12,8 +12,6 @@ Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: requests>=2.25.1
-Requires-Dist: numpy>=1.19.0
-Requires-Dist: opencv-python>=4.5.0
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
@@ -31,4 +29,5 @@ Dynamic: summary
 ## 安装
 
 ```bash
-pip install py-qj-robots
+pip install py-qj-robots# perception-python-sdk
+# perception-python-sdk
