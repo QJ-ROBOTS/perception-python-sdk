@@ -1,9 +1,13 @@
 # py-qj-robots
 
-千诀机器人 Python SDK
+QJ ROBOTS Python SDK
 
-## 安装
+## Getting Started
 
 ```bash
-pip install py-qj-robots# perception-python-sdk
 # perception-python-sdk
+
+pip install py-qj-robots
+
+```
+
