@@ -23,7 +23,7 @@ The following environment variables need to be configured before using the SDK:
 - QJ_APP_ID: Application ID
 - QJ_APP_SECRET: Application Secret
 
-You can click [here](https://qj-robots.feishu.cn/share/base/form/shrcnecZCYdlGcMZPLw4DMb09wd) to obtain your Application ID and Secret.
+You can click [here](https://qj-robots.feishu.cn/share/base/form/shrcnzmXqHZsyw5AKi6oIuCKf4J) to obtain your Application ID and Secret.
 
 You can configure these variables in two ways:
 
