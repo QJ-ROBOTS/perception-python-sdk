@@ -1,14 +1,12 @@
-import base64
 from typing import List, Dict, Union, Optional
+from typing import TYPE_CHECKING
 
 import requests
 
 from .authorization import Authorization
 
-from typing import TYPE_CHECKING
-
 if TYPE_CHECKING:
-    from typing import List, Dict, Union, Optional, Tuple
+    from typing import List, Dict, Union, Optional
 
 
 class Perception:
@@ -59,17 +57,19 @@ class Perception:
         while True:
             # Check if polling has exceeded timeout
             if time.time() - start_time > timeout:
-                raise TimeoutError(f"Polling exceeded {timeout} seconds timeout")
-                
+                raise TimeoutError(f"{task_id} => Polling exceeded {timeout} seconds timeout")
+
             # Get task result
             result = self._get_task_result(task_id)
-            
+
+            if result['taskStatus'] == 'SUBMIT_FAILED':
+                raise RuntimeError(f"{task_id} => task submit failed,please retry later.")
             # Return if task is complete
             if result['taskStatus'] == 'DONE':
                 return result
-                
+
             # Wait before next poll
-            time.sleep(0.5)
+            time.sleep(0.01)
 
     def _validate_image_params(self, image_type: str, depth_url: Optional[str] = None) -> None:
         """Validate image type and depth_url parameters
@@ -100,8 +100,8 @@ class Perception:
             return ','.join(object_names)
         return object_names
 
-    def _prepare_request_data(self, image_type: str, image_url: str, 
-                            object_names: Union[str, List[str]], depth_url: Optional[str] = None) -> Dict:
+    def _prepare_request_data(self, image_type: str, image_url: str,
+                              object_names: Union[str, List[str]], depth_url: Optional[str] = None) -> Dict:
         """Prepare request data for perception API calls
         
         Args:
@@ -170,7 +170,7 @@ class Perception:
         return result["data"]
 
     def check_image(self, image_type: str, image_url: str, object_names: Union[str, List[str]],
-                   depth_url: Optional[str] = None) -> Dict:
+                    depth_url: Optional[str] = None) -> Dict:
         """Check image using perception model
         
         Args:
@@ -191,21 +191,21 @@ class Perception:
         """
         # Validate parameters
         self._validate_image_params(image_type, depth_url)
-        
+
         # Prepare request data
         data = self._prepare_request_data(image_type, image_url, object_names, depth_url)
-        
+
         # Send request and get task ID
         result = self._make_post_request(
             endpoint="/open-api/open-apis/app/perception/check",
             data=data
         )
-        
+
         # Poll for results
         return self._poll_task_result(result['taskId'])
 
     def split_image(self, image_type: str, image_url: str, object_names: Union[str, List[str]],
-                   depth_url: Optional[str] = None) -> Dict:
+                    depth_url: Optional[str] = None) -> Dict:
         """Split objects in an image using perception model
         
         Args:
@@ -230,21 +230,21 @@ class Perception:
         """
         # Validate parameters
         self._validate_image_params(image_type, depth_url)
-        
+
         # Prepare request data
         data = self._prepare_request_data(image_type, image_url, object_names, depth_url)
-        
+
         # Send request and get task ID
         result = self._make_post_request(
             endpoint="/open-api/open-apis/app/perception/split",
             data=data
         )
-        
+
         # Poll for results
         return self._poll_task_result(result['taskId'])
 
     def props_describe(self, image_type: str, image_url: str, object_names: Union[str, List[str]],
-                      questions: Union[str, List[str]], depth_url: Optional[str] = None) -> Dict:
+                       questions: Union[str, List[str]], depth_url: Optional[str] = None) -> Dict:
         """Get detailed property descriptions of objects in an image using perception model
         
         Args:
@@ -270,27 +270,27 @@ class Perception:
         """
         # Validate parameters
         self._validate_image_params(image_type, depth_url)
-        
+
         # Prepare request data
         data = self._prepare_request_data(image_type, image_url, object_names, depth_url)
-        
+
         # Add questions to request data
         if isinstance(questions, list):
             data["questions"] = ','.join(questions)
         else:
             data["questions"] = questions
-        
+
         # Send request and get task ID
         result = self._make_post_request(
             endpoint="/open-api/open-apis/app/perception/props-describe",
             data=data
         )
-        
+
         # Poll for results
         return self._poll_task_result(result['taskId'])
 
     def angle_prediction(self, image_type: str, image_url: str, object_names: Union[str, List[str]],
-                      depth_url: Optional[str] = None) -> Dict:
+                         depth_url: Optional[str] = None) -> Dict:
         """Predict angles of objects in an image using perception model
         
         Args:
@@ -315,21 +315,21 @@ class Perception:
         """
         # Validate parameters
         self._validate_image_params(image_type, depth_url)
-        
+
         # Prepare request data
         data = self._prepare_request_data(image_type, image_url, object_names, depth_url)
-        
+
         # Send request and get task ID
         result = self._make_post_request(
             endpoint="/open-api/open-apis/app/perception/angle-prediction",
             data=data
         )
-        
+
         # Poll for results
         return self._poll_task_result(result['taskId'])
 
     def key_point_prediction(self, image_type: str, image_url: str, object_names: Union[str, List[str]],
-                      depth_url: Optional[str] = None) -> Dict:
+                             depth_url: Optional[str] = None) -> Dict:
         """Predict key points of objects in an image using perception model
         
         Args:
@@ -356,21 +356,21 @@ class Perception:
         """
         # Validate parameters
         self._validate_image_params(image_type, depth_url)
-        
+
         # Prepare request data
         data = self._prepare_request_data(image_type, image_url, object_names, depth_url)
-        
+
         # Send request and get task ID
         result = self._make_post_request(
             endpoint="/open-api/open-apis/app/perception/key-point-prediction",
             data=data
         )
-        
+
         # Poll for results
         return self._poll_task_result(result['taskId'])
 
     def grab_point_prediction(self, image_type: str, image_url: str, object_names: Union[str, List[str]],
-                      depth_url: Optional[str] = None) -> Dict:
+                              depth_url: Optional[str] = None) -> Dict:
         """Predict grab points of objects in an image using perception model
         
         Args:
@@ -397,21 +397,21 @@ class Perception:
         """
         # Validate parameters
         self._validate_image_params(image_type, depth_url)
-        
+
         # Prepare request data
         data = self._prepare_request_data(image_type, image_url, object_names, depth_url)
-        
+
         # Send request and get task ID
         result = self._make_post_request(
             endpoint="/open-api/open-apis/app/perception/grab-point-prediction",
             data=data
         )
-        
+
         # Poll for results
         return self._poll_task_result(result['taskId'])
 
     def full_perception(self, image_type: str, image_url: str, object_names: Union[str, List[str]],
-                      questions: Union[str, List[str]], depth_url: Optional[str] = None) -> Dict:
+                        questions: Union[str, List[str]], depth_url: Optional[str] = None) -> Dict:
         """Submit a comprehensive perception task that includes all 6 perception functions
         
         Args:
@@ -448,21 +448,21 @@ class Perception:
         """
         # Validate parameters
         self._validate_image_params(image_type, depth_url)
-        
+
         # Prepare request data
         data = self._prepare_request_data(image_type, image_url, object_names, depth_url)
-        
+
         # Add questions to request data
         if isinstance(questions, list):
             data["questions"] = ','.join(questions)
         else:
             data["questions"] = questions
-        
+
         # Send request and get task ID
         result = self._make_post_request(
             endpoint="/open-api/open-apis/app/perception/full",
             data=data
         )
-        
+
         # Poll for results
         return self._poll_task_result(result['taskId'])

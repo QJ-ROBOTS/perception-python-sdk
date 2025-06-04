@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="py-qj-robots",
-    version="0.1.7",
+    version="0.1.9",
     author="QJ ROBOTS",
     author_email="github@qj-robots.com",
     description="QJ Python SDK",
